@@ -1,3 +1,3 @@
 # trainingsplaner-ressource-server
 
-Ressource Server für die Trainingsplaner App.
+Resource Server für die Trainingsplaner App.
