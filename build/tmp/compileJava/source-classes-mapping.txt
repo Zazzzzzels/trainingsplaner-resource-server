@@ -1,0 +1,10 @@
+de/tlg/trainingsplaner/resourceserver/ResourceServerApplication.java
+ de.tlg.trainingsplaner.resourceserver.ResourceServerApplication
+de/tlg/trainingsplaner/resourceserver/repository/UserRepository.java
+ de.tlg.trainingsplaner.resourceserver.repository.UserRepository
+de/tlg/trainingsplaner/resourceserver/model/entity/User.java
+ de.tlg.trainingsplaner.resourceserver.model.entity.User
+de/tlg/trainingsplaner/resourceserver/model/request/UserRequest.java
+ de.tlg.trainingsplaner.resourceserver.model.request.UserRequest
+de/tlg/trainingsplaner/resourceserver/controller/ResourceController.java
+ de.tlg.trainingsplaner.resourceserver.controller.ResourceController
