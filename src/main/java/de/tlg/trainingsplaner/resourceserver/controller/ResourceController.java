@@ -26,9 +26,14 @@ public class ResourceController {
     private UserRepository userRepository;
 
     @PostMapping(path = "/users/")
-    public ResponseEntity<String> getAllUsers (@RequestBody UserRequest userRequest, @RequestParam String accessToken) {
+    public ResponseEntity<String> registerNewUser (@RequestBody UserRequest userRequest, @RequestParam String accessToken) {
         if(!accessTokenValid(accessToken, userRequest.getEmail())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // prevent email from being used more than once
+        if (userRepository.findUserByEmail(userRequest.getEmail()) != null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         User dbUser = new User();
@@ -52,7 +57,8 @@ public class ResourceController {
     }
 
     private static boolean accessTokenValid(String accessToken, String email) {
-        // check db --> has user access token?
+        // TODO: check db --> has user valid access token?
+        // workaround to test if program return UNAUTHORIZED if access token is not valid:
         return !"unauthorized".equalsIgnoreCase(accessToken);
     }
 }
