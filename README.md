@@ -22,5 +22,5 @@ Jeder Request erwartet einen Authorization HEADER. Im Tab "Authorization" unter 
 Alternativ kann der Authorization Header manuell unter dem "Header" Tab eingegeben werden. Dann muss ``Bearer {accessToken}`` eingetragen werden 
 
 ### Mögliche Werte
-* ``unauthorized``: gibt einen Fehler 401 UNAUTHORIZED zurück. Testet, was passiert, wenn ein ungültiger Token angegeben wird
+* ``Bearer unauthorized``: gibt einen Fehler 401 UNAUTHORIZED zurück. Testet, was passiert, wenn ein ungültiger Token angegeben wird
 * Andere Werte werden momentan als gültig anerkannt.
