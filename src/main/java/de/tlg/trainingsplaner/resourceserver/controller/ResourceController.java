@@ -2,6 +2,8 @@ package de.tlg.trainingsplaner.resourceserver.controller;
 
 import de.tlg.trainingsplaner.resourceserver.model.entity.User;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserRequest;
+import de.tlg.trainingsplaner.resourceserver.model.response.UserInfoResponse;
+import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
 import de.tlg.trainingsplaner.resourceserver.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +27,26 @@ public class ResourceController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping(path = "/users/")
-    public ResponseEntity<String> registerNewUser (@RequestBody UserRequest userRequest, @RequestParam String accessToken) {
-        if(!accessTokenValid(accessToken, userRequest.getEmail())) {
+    @GetMapping(path = "/users")
+    public ResponseEntity<UserInfoResponse> getUserInfo(@RequestHeader(name = "authorization") String accessToken,
+                                                        @RequestParam(name = "uid") String userId) {
+        if (accessTokenInvalid(accessToken, userId)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        User user = userRepository.findUserByEmail(userId);
+
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(UserTransformer.transformUserToUserInfoResponse(user));
+    }
+
+    @PostMapping(path = "/users")
+    public ResponseEntity<String> registerNewUser (@RequestHeader(name = "authorization") String accessToken,
+                                                   @RequestBody UserRequest userRequest) {
+        if (accessTokenInvalid(accessToken, userRequest.getEmail())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -36,10 +55,7 @@ public class ResourceController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        User dbUser = new User();
-        dbUser.setFirstName(userRequest.getFirstName());
-        dbUser.setLastName(userRequest.getLastName());
-        dbUser.setEmail(userRequest.getEmail());
+        User dbUser = UserTransformer.transformUserRequestToUser(userRequest);
 
         userRepository.save(dbUser);
 
@@ -56,9 +72,11 @@ public class ResourceController {
         return result;
     }
 
-    private static boolean accessTokenValid(String accessToken, String email) {
+    private boolean accessTokenInvalid(String accessToken, String userId) {
         // TODO: check db --> has user valid access token?
         // workaround to test if program return UNAUTHORIZED if access token is not valid:
-        return !"unauthorized".equalsIgnoreCase(accessToken);
+        // userId is currently the email address
+
+        return "Bearer unauthorized".equalsIgnoreCase(accessToken);
     }
 }
