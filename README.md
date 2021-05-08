@@ -7,12 +7,12 @@ Die Anwendung läuft lokal auf Port ``8081``.
 
 ## Request URLs
 ### Auslesen der User Informationen
-* ``GET localhost:8081//trainingsplaner/resource-server/users?uid={user-id}``
+* ``GET localhost:8081/trainingsplaner/resource-server/users?uid={user-id}``
     * Header: ``Authorization: Bearer {accessToken}``
     * Query:``uid`` ist momentan die Email Adresse
 
 ### Anlegen eines neuen Users in der Datenbank (temporärer Endpunkt)
-* ``POST localhost:8081//trainingsplaner/resource-server/users``
+* ``POST localhost:8081/trainingsplaner/resource-server/users``
     * Header: ``Authorization: Bearer {accessToken}``
     * Body: ``UserRequest`` Objekt (model/request/UserRequest.java)
 
