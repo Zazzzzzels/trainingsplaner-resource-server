@@ -72,11 +72,12 @@ public class ResourceController {
         return result;
     }
 
+    // TODO: check db --> has user valid access token?
     private boolean accessTokenInvalid(String accessToken, String userId) {
-        // TODO: check db --> has user valid access token?
+        final String invalidToken = "Bearer unauthorized";
         // workaround to test if program return UNAUTHORIZED if access token is not valid:
-        // userId is currently the email address
+        // userId is currently the email address --> needed to check access token
 
-        return "Bearer unauthorized".equalsIgnoreCase(accessToken);
+        return invalidToken.equalsIgnoreCase(accessToken);
     }
 }
