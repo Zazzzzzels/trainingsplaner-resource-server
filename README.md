@@ -1,15 +1,16 @@
 # trainingsplaner-resource-server
 
-Resource Server für die Trainingsplaner App.
+Resource Server für die Trainingsplaner App. Die Anwendung läuft lokal auf Port ``8081`` (konfiguriert in ``application.properties``).
 
-## Port
-Die Anwendung läuft lokal auf Port ``8081``.
+## Dokumenation
+* Aufrufen der swagger-ui: ``localhost:8081/resource-server/swagger-ui.html``
+* Generieren der aktuellen Schnittstellenbeschreibung in YAML: ``localhost:8081/resource-server/tp-resource-server-api-docs.yaml``
 
 ## Request URLs
 ### Auslesen der User Informationen
-* ``GET localhost:8081/trainingsplaner/resource-server/users?uid={user-id}``
+* ``GET localhost:8081/trainingsplaner/resource-server/users/{userId}``
     * Header: ``Authorization: Bearer {accessToken}``
-    * Query:``uid`` ist momentan die Email Adresse
+    * Path: ``{userId}`` ist momentan die Email Adresse
 
 ### Anlegen eines neuen Users in der Datenbank (temporärer Endpunkt)
 * ``POST localhost:8081/trainingsplaner/resource-server/users``

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-@Controller
+@RestController
 @RequestMapping(path="/trainingsplaner/resource-server")
 public class ResourceController {
 
@@ -27,9 +27,10 @@ public class ResourceController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping(path = "/users")
+    @GetMapping(path = "/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UserInfoResponse> getUserInfo(@RequestHeader(name = "authorization") String accessToken,
-                                                        @RequestParam(name = "uid") String userId) {
+                                                        @PathVariable String userId) {
         if (accessTokenInvalid(accessToken, userId)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
