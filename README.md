@@ -3,8 +3,9 @@
 Resource Server für die Trainingsplaner App. Die Anwendung läuft lokal auf Port ``8081`` (konfiguriert in ``application.properties``).
 
 ## Dokumenation
-* Aufrufen der swagger-ui: ``localhost:8081/resource-server/swagger-ui.html``
-* Generieren der aktuellen Schnittstellenbeschreibung in YAML: ``localhost:8081/resource-server/tp-resource-server-api-docs.yaml``
+Bei gestarteter Anwendung:
+* Aufrufen der swagger-ui: [http://localhost:8081/resource-server/swagger-ui.html]
+* Abrufen der OpenAPI Beschreibung: [http://localhost:8081/resource-server/tp-resource-server-api-docs.yaml]
 
 ## Request URLs
 ### Auslesen der User Informationen
