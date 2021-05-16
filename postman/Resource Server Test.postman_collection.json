@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "afcb4b82-72c9-495b-b34d-c7cc56ae9891",
+		"name": "Resource Server Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add multiple test users to db",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"userId\":\"10\",\n        \"firstName\":\"Usain\",\n        \"lastName\":\"Bolt\",\n        \"email\":\"lightning@ontrack.world\"\n    },\n    {\n        \"userId\":\"20\",\n        \"firstName\":\"Chris\",\n        \"lastName\":\"Coleman\",\n        \"email\":\"dopes@a.lot\"\n    },\n    {\n        \"userId\":\"30\",\n        \"firstName\":\"Paul\",\n        \"lastName\":\"Wenzel\",\n        \"email\":\"throws@very.far\"\n    },\n    {\n        \"userId\":\"40\",\n        \"firstName\":\"Jonas\",\n        \"lastName\":\"Hennecke\",\n        \"email\":\"throws@notso.far\"\n    },\n    {\n        \"userId\":\"50\",\n        \"firstName\":\"Ralf\",\n        \"lastName\":\"Bartel\",\n        \"email\":\"likes@shot.put\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8081/trainingsplaner/resource-server/test/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"trainingsplaner",
+						"resource-server",
+						"test",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all users info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "authorized",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/trainingsplaner/resource-server/test/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"trainingsplaner",
+						"resource-server",
+						"test",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

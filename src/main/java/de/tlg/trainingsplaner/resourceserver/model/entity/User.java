@@ -4,20 +4,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.UUID;
 
 @Entity
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
+    private String userId;
     private String firstName;
     private String lastName;
     private String email;
 
     public User() { }
 
-    public User(String firstName, String lastName, String email) {
+    public User(String userId, String firstName, String lastName, String email) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -27,8 +30,12 @@ public class User {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {

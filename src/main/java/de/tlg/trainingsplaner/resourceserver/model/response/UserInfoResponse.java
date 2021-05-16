@@ -1,14 +1,24 @@
 package de.tlg.trainingsplaner.resourceserver.model.response;
 
 public class UserInfoResponse {
+    private String userId;
     private String firstName;
     private String lastName;
     private String email;
 
-    public UserInfoResponse(String firstName, String lastName, String email) {
+    public UserInfoResponse(String userId, String firstName, String lastName, String email) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {
@@ -33,5 +43,10 @@ public class UserInfoResponse {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("UserInfo { firstName : %s, lastName : %s, email : %s }", this.firstName, this.lastName, this.email);
     }
 }
