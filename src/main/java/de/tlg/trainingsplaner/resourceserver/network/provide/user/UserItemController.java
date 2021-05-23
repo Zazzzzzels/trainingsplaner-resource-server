@@ -1,4 +1,4 @@
-package de.tlg.trainingsplaner.resourceserver.network.provide;
+package de.tlg.trainingsplaner.resourceserver.network.provide.user;
 
 import de.tlg.trainingsplaner.resourceserver.config.ApplicationConfiguration;
 import de.tlg.trainingsplaner.resourceserver.helper.Helper;
@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +26,10 @@ public class UserItemController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UserItemController.class);
 
-    // read application port from 'application.properties'
-    @Value("${server.port}")
-    public int APPLICATION_PORT;
-
     @Autowired
     private UserRepository userRepository;
 
-    @Operation(summary = "get a users info by its id")
+    @Operation(summary = "get a users info by its id", operationId = "getUserInfo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "the user was found",
             content = { @Content(mediaType = "application/json", schema = @Schema(implementation = UserInfoResponse.class))}),
@@ -43,8 +38,10 @@ public class UserItemController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<UserInfoResponse> getUserInfo(@RequestHeader(name = "authorization") String accessToken,
-                                                        @Parameter(description = "userId to be searched") @PathVariable String userId) {
+    public ResponseEntity<UserInfoResponse> getUserInfo(@Parameter(description = "access token to validate request")
+                                                            @RequestHeader(name = "authorization") String accessToken,
+                                                        @Parameter(description = "userId to be searched")
+                                                            @PathVariable String userId) {
         if (Helper.accessTokenInvalid(accessToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -58,10 +55,17 @@ public class UserItemController {
         return ResponseEntity.ok(UserTransformer.transformUserToUserInfoResponse(user));
     }
 
+    @Operation(summary = "override an existing user", operationId = "updateUserInfo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "user information was updated", content = @Content),
+            @ApiResponse(responseCode = "401", description = "client is unauthorized to update user info", content = @Content),
+            @ApiResponse(responseCode = "404", description = "no user for given id was not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "unexpected error", content = @Content)
+    })
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> updateUserInfo(@RequestHeader(name = "authorization") String accessToken,
-                                                 @PathVariable String userId,
+    public ResponseEntity<String> updateUserInfo(@Parameter(description = "access token") @RequestHeader(name = "authorization") String accessToken,
+                                                 @Parameter(description = "user id to update") @PathVariable String userId,
                                                  @RequestBody UserUpdateRequest userUpdateRequest) {
         if(Helper.accessTokenInvalid(accessToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -83,10 +87,17 @@ public class UserItemController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(summary = "delete an existing user", operationId = "deleteUserFromDb")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "the user was deleted", content = @Content),
+            @ApiResponse(responseCode = "401", description = "client is unauthorized to delete user info", content = @Content),
+            @ApiResponse(responseCode = "404", description = "no user for given id was not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "unexpected error", content = @Content)
+    })
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> deleteUserFromDb(@RequestHeader(name = "authorization") String accessToken,
-                                                   @PathVariable String userId) {
+    public ResponseEntity<String> deleteUserFromDb(@Parameter(description = "access token") @RequestHeader(name = "authorization") String accessToken,
+                                                   @Parameter(description = "user to delete") @PathVariable String userId) {
         if(Helper.accessTokenInvalid(accessToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -107,11 +118,19 @@ public class UserItemController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "not implemented")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "501", description = "not implemented", content = @Content)
+    })
     @PostMapping
     public ResponseEntity<String> post() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @Operation(summary = "not implemented")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "501", description = "not implemented", content = @Content)
+    })
     @PatchMapping
     public ResponseEntity<String> patch() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);

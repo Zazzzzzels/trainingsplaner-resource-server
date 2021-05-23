@@ -1,4 +1,4 @@
-package de.tlg.trainingsplaner.resourceserver.network.provide;
+package de.tlg.trainingsplaner.resourceserver.network.provide.user;
 
 import de.tlg.trainingsplaner.resourceserver.config.ApplicationConfiguration;
 import de.tlg.trainingsplaner.resourceserver.model.entity.User;
