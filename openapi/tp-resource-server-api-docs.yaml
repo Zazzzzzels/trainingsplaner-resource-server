@@ -1,29 +1,215 @@
-# Generated on 10th May 2021
 openapi: 3.0.1
 info:
-  title: OpenAPI definition
-  version: v0
+  title: Trainingsplaner Resource Server API
+  description: Spring Resource Server
+  version: "0.1"
 servers:
-- url: http://localhost:8081
-  description: Generated server url
+  - url: http://localhost:8081
+    description: Generated server url
 paths:
   /trainingsplaner/resource-server/users:
+    get:
+      tags:
+        - user-collection-controller
+      summary: not allowed
+      operationId: get
+      responses:
+        "405":
+          description: method not allowed
+    put:
+      tags:
+        - user-collection-controller
+      summary: not allowed
+      operationId: put
+      responses:
+        "405":
+          description: method not allowed
     post:
       tags:
-      - resource-controller
+        - user-collection-controller
+      summary: register new user in database
       operationId: registerNewUser
       parameters:
-      - name: authorization
-        in: header
-        required: true
-        schema:
-          type: string
+        - name: authorization
+          in: header
+          description: access token
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserRequest'
+              $ref: '#/components/schemas/UserRegisterRequest'
         required: true
+      responses:
+        "201":
+          description: user information was created
+        "500":
+          description: unexpected error
+        "409":
+          description: given mail and/or id is already registered
+        "401":
+          description: client is unauthorized to request user info
+    delete:
+      tags:
+        - user-collection-controller
+      summary: not allowed
+      operationId: delete
+      responses:
+        "405":
+          description: method not allowed
+    patch:
+      tags:
+        - user-collection-controller
+      summary: not allowed
+      operationId: patch
+      responses:
+        "405":
+          description: method not allowed
+  /trainingsplaner/resource-server/users/{userId}:
+    get:
+      tags:
+        - user-item-controller
+      summary: get a users info by its id
+      operationId: getUserInfo
+      parameters:
+        - name: authorization
+          in: header
+          description: access token to validate request
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: userId to be searched
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: the user was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoResponse'
+        "404":
+          description: no user for given id was not found
+        "401":
+          description: client is unauthorized to request user info
+    put:
+      tags:
+        - user-item-controller
+      summary: override an existing user
+      operationId: updateUserInfo
+      parameters:
+        - name: authorization
+          in: header
+          description: access token
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: user id to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+        required: true
+      responses:
+        "500":
+          description: unexpected error
+        "404":
+          description: no user for given id was not found
+        "401":
+          description: client is unauthorized to update user info
+        "204":
+          description: user information was updated
+    post:
+      tags:
+        - user-item-controller
+      summary: not implemented
+      operationId: post
+      responses:
+        "501":
+          description: not implemented
+    delete:
+      tags:
+        - user-item-controller
+      summary: delete an existing user
+      operationId: deleteUserFromDb
+      parameters:
+        - name: authorization
+          in: header
+          description: access token
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: user to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "500":
+          description: unexpected error
+        "200":
+          description: the user was deleted
+        "404":
+          description: no user for given id was not found
+        "401":
+          description: client is unauthorized to delete user info
+    patch:
+      tags:
+        - user-item-controller
+      summary: not implemented
+      operationId: patch_1
+      responses:
+        "501":
+          description: not implemented
+  /trainingsplaner/resource-server/test/users:
+    get:
+      tags:
+        - user-test-controller
+      operationId: getAllUserInfo
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserInfoResponse'
+    post:
+      tags:
+        - user-test-controller
+      operationId: addMultipleUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserRegisterRequest'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                type: string
+    delete:
+      tags:
+        - user-test-controller
+      operationId: clearDatabase
       responses:
         "200":
           description: OK
@@ -31,46 +217,44 @@ paths:
             '*/*':
               schema:
                 type: string
-  /trainingsplaner/resource-server/users/{userId}:
-    get:
-      tags:
-      - resource-controller
-      operationId: getUserInfo
-      parameters:
-      - name: authorization
-        in: header
-        required: true
-        schema:
-          type: string
-      - name: userId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/UserInfoResponse'
 components:
   schemas:
-    UserRequest:
+    UserUpdateRequest:
       type: object
       properties:
+        email:
+          type: string
+    UserRegisterRequest:
+      type: object
+      properties:
+        userId:
+          type: string
         firstName:
           type: string
         lastName:
           type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - DIVERSE
         email:
           type: string
     UserInfoResponse:
       type: object
       properties:
+        userId:
+          type: string
         firstName:
           type: string
         lastName:
           type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - DIVERSE
         email:
           type: string

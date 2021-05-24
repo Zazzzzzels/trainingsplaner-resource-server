@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n    {\n        \"userId\":\"10\",\n        \"firstName\":\"Usain\",\n        \"lastName\":\"Bolt\",\n        \"email\":\"lightning@ontrack.world\"\n    },\n    {\n        \"userId\":\"20\",\n        \"firstName\":\"Chris\",\n        \"lastName\":\"Coleman\",\n        \"email\":\"dopes@a.lot\"\n    },\n    {\n        \"userId\":\"30\",\n        \"firstName\":\"Paul\",\n        \"lastName\":\"Wenzel\",\n        \"email\":\"throws@very.far\"\n    },\n    {\n        \"userId\":\"40\",\n        \"firstName\":\"Jonas\",\n        \"lastName\":\"Hennecke\",\n        \"email\":\"throws@notso.far\"\n    },\n    {\n        \"userId\":\"50\",\n        \"firstName\":\"Ralf\",\n        \"lastName\":\"Bartel\",\n        \"email\":\"likes@shot.put\"\n    }\n]",
+					"raw": "[\n    {\n        \"userId\":\"10\",\n        \"firstName\":\"Usain\",\n        \"lastName\":\"Bolt\",\n        \"gender\":\"MALE\",\n        \"email\":\"lightning@ontrack.world\"\n    },\n    {\n        \"userId\":\"20\",\n        \"firstName\":\"Chris\",\n        \"lastName\":\"Coleman\",\n        \"gender\":\"MALE\",\n        \"email\":\"dopes@a.lot\"\n    },\n    {\n        \"userId\":\"30\",\n        \"firstName\":\"Paul\",\n        \"lastName\":\"Wenzel\",\n        \"gender\":\"MALE\",\n        \"email\":\"throws@very.far\"\n    },\n    {\n        \"userId\":\"40\",\n        \"firstName\":\"Jonas\",\n        \"lastName\":\"Hennecke\",\n        \"gender\":\"MALE\",\n        \"email\":\"throws@notso.far\"\n    },\n    {\n        \"userId\":\"50\",\n        \"firstName\":\"Ralf\",\n        \"lastName\":\"Bartel\",\n        \"gender\":\"MALE\",\n        \"email\":\"likes@shot.put\"\n    }\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,6 +49,27 @@
 					]
 				},
 				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8081/trainingsplaner/resource-server/test/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"trainingsplaner",
+						"resource-server",
+						"test",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete all users",
+			"request": {
+				"method": "DELETE",
 				"header": [],
 				"url": {
 					"raw": "localhost:8081/trainingsplaner/resource-server/test/users",

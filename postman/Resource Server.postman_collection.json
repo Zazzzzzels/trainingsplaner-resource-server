@@ -29,7 +29,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\":\"10587459512059865312\",\n    \"firstName\":\"Usain\",\n    \"lastName\":\"Bolt\",\n    \"email\":\"lightning@ontrack.world\"\n}",
+					"raw": "{\n    \"userId\":\"2592\",\n    \"firstName\":\"Justin\",\n    \"lastName\":\"Gatlin\",\n    \"gender\":\"MALE\",\n    \"email\":\"justin@the.doper\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,7 +67,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8081/trainingsplaner/resource-server/users/{{userId}}",
+					"raw": "localhost:8081/trainingsplaner/resource-server/users/3651e932-096d-4a15-9423-780b1514f14d",
 					"host": [
 						"localhost"
 					],
@@ -76,7 +76,7 @@
 						"trainingsplaner",
 						"resource-server",
 						"users",
-						"{{userId}}"
+						"3651e932-096d-4a15-9423-780b1514f14d"
 					]
 				}
 			},
@@ -157,7 +157,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8081/trainingsplaner/resource-server/users/{{userId}}",
+					"raw": "localhost:8081/trainingsplaner/resource-server/users/3651e932-096d-4a15-9423-780b1514f14d",
 					"host": [
 						"localhost"
 					],
@@ -166,7 +166,7 @@
 						"trainingsplaner",
 						"resource-server",
 						"users",
-						"{{userId}}"
+						"3651e932-096d-4a15-9423-780b1514f14d"
 					]
 				}
 			},
