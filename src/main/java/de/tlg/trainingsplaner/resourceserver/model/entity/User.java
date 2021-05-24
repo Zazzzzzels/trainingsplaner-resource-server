@@ -14,14 +14,16 @@ public class User {
     private String userId;
     private String firstName;
     private String lastName;
+    private GenderEnum gender;
     private String email;
 
     public User() { }
 
-    public User(String userId, String firstName, String lastName, String email) {
+    public User(String userId, String firstName, String lastName, GenderEnum gender, String email) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gender = gender;
         this.email = email;
     }
 
@@ -51,6 +53,18 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public GenderEnum getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderEnum gender) {
+        this.gender = gender;
     }
 
     public String getEmail() {

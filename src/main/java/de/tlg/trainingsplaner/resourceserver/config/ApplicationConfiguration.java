@@ -1,11 +1,10 @@
 package de.tlg.trainingsplaner.resourceserver.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.AbstractRequestLoggingFilter;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -28,6 +27,16 @@ public class ApplicationConfiguration {
         filter.setAfterMessagePrefix("[DATA] ");
         filter.setIncludeClientInfo(true);
         return filter;
+    }
+
+    @Bean
+    public OpenAPI resourceServerApi() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Trainingsplaner Resource Server API")
+                        .version("0.1")
+                        .description("Spring Resource Server")
+                );
     }
 
 }

@@ -46,4 +46,11 @@ public class UserTestController {
 
         return ResponseEntity.ok(userList);
     }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> clearDatabase() {
+        userRepository.deleteAll();
+        return ResponseEntity.ok("all users deleted");
+    }
 }

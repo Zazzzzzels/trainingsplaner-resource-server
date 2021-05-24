@@ -1,15 +1,19 @@
 package de.tlg.trainingsplaner.resourceserver.model.response;
 
+import de.tlg.trainingsplaner.resourceserver.model.entity.GenderEnum;
+
 public class UserInfoResponse {
     private String userId;
     private String firstName;
     private String lastName;
+    private GenderEnum gender;
     private String email;
 
-    public UserInfoResponse(String userId, String firstName, String lastName, String email) {
+    public UserInfoResponse(String userId, String firstName, String lastName, GenderEnum gender, String email) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gender = gender;
         this.email = email;
     }
 
@@ -37,6 +41,14 @@ public class UserInfoResponse {
         this.lastName = lastName;
     }
 
+    public GenderEnum getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderEnum gender) {
+        this.gender = gender;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -45,8 +57,4 @@ public class UserInfoResponse {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return String.format("UserInfo { firstName : %s, lastName : %s, email : %s }", this.firstName, this.lastName, this.email);
-    }
 }

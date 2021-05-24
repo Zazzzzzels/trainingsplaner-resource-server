@@ -33,7 +33,7 @@ public class UserCollectionController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "user information was created", content = @Content),
             @ApiResponse(responseCode = "401", description = "client is unauthorized to request user info", content = @Content),
-            @ApiResponse(responseCode = "409", description = "user with given mail and/or id is already stored", content = @Content),
+            @ApiResponse(responseCode = "409", description = "given mail and/or id is already registered", content = @Content),
             @ApiResponse(responseCode = "500", description = "unexpected error", content = @Content)
     })
     @PostMapping

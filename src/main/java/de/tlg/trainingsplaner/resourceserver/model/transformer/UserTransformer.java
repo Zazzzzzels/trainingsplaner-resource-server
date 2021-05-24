@@ -1,5 +1,6 @@
 package de.tlg.trainingsplaner.resourceserver.model.transformer;
 
+import de.tlg.trainingsplaner.resourceserver.model.entity.GenderEnum;
 import de.tlg.trainingsplaner.resourceserver.model.entity.User;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserRegisterRequest;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserUpdateRequest;
@@ -11,6 +12,7 @@ public class UserTransformer {
                 userRegisterRequest.getUserId(),
                 userRegisterRequest.getFirstName(),
                 userRegisterRequest.getLastName(),
+                userRegisterRequest.getGender(),
                 userRegisterRequest.getEmail()
         );
     }
@@ -25,6 +27,7 @@ public class UserTransformer {
                 user.getUserId(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getGender(),
                 user.getEmail()
         );
     }

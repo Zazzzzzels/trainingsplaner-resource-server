@@ -1,9 +1,12 @@
 package de.tlg.trainingsplaner.resourceserver.model.request;
 
+import de.tlg.trainingsplaner.resourceserver.model.entity.GenderEnum;
+
 public class UserRegisterRequest {
     private String userId;
     private String firstName;
     private String lastName;
+    private GenderEnum gender;
     private String email;
 
     public String getUserId() {
@@ -28,6 +31,14 @@ public class UserRegisterRequest {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public GenderEnum getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderEnum gender) {
+        this.gender = gender;
     }
 
     public String getEmail() {
