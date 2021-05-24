@@ -2,9 +2,13 @@ package de.tlg.trainingsplaner.resourceserver.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
+
+import java.time.Duration;
 
 @Configuration
 public class ApplicationConfiguration {
@@ -15,6 +19,14 @@ public class ApplicationConfiguration {
     public static final String USER_ITEM_BASE_PATH = USER_COLLECTION_BASE_PATH + "/{userId}";
 
     public static final String USER_RESOURCE_TEST_BASE_PATH = APPLICATION_BASE_PATH + "/test/users";
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .setConnectTimeout(Duration.ofMillis(3000))
+                .setReadTimeout(Duration.ofMillis(3000))
+                .build();
+    }
 
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {

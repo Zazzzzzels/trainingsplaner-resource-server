@@ -1,9 +1,9 @@
 package de.tlg.trainingsplaner.resourceserver.network.provide.user;
 
 import de.tlg.trainingsplaner.resourceserver.config.ApplicationConfiguration;
-import de.tlg.trainingsplaner.resourceserver.helper.Helper;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserRegisterRequest;
 import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
+import de.tlg.trainingsplaner.resourceserver.network.consume.AuthServerConsument;
 import de.tlg.trainingsplaner.resourceserver.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +29,8 @@ public class UserCollectionController {
     @Autowired
     UserRepository userRepository;
 
+    AuthServerConsument authServerConsument = new AuthServerConsument();
+
     @Operation(summary = "register new user in database", operationId = "registerNewUser")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "user information was created", content = @Content),
@@ -41,7 +43,7 @@ public class UserCollectionController {
     public ResponseEntity<String> registerNewUser (@Parameter(description = "access token")
                                                        @RequestHeader(name = "authorization") String accessToken,
                                                    @RequestBody UserRegisterRequest userRegisterRequest) {
-        if (Helper.accessTokenInvalid(accessToken)) {
+        if (authServerConsument.accessTokenInvalid(accessToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
