@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 
 @Component
-public class AuthServerConsument {
+public class AuthServerConsumer {
 
     final private RestTemplate restTemplate = new RestTemplateBuilder()
             .setConnectTimeout(Duration.ofMillis(3000))

@@ -5,7 +5,7 @@ import de.tlg.trainingsplaner.resourceserver.model.entity.User;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserUpdateRequest;
 import de.tlg.trainingsplaner.resourceserver.model.response.UserInfoResponse;
 import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
-import de.tlg.trainingsplaner.resourceserver.network.consume.AuthServerConsument;
+import de.tlg.trainingsplaner.resourceserver.network.consume.AuthServerConsumer;
 import de.tlg.trainingsplaner.resourceserver.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +29,7 @@ public class UserItemController {
     @Autowired
     private UserRepository userRepository;
 
-    AuthServerConsument authServerConsument = new AuthServerConsument();
+    AuthServerConsumer authServerConsumer = new AuthServerConsumer();
 
     @Operation(summary = "get a users info by its id", operationId = "getUserInfo")
     @ApiResponses(value = {
@@ -44,7 +44,7 @@ public class UserItemController {
                                                             @RequestHeader(name = "authorization") String accessToken,
                                                         @Parameter(description = "userId to be searched")
                                                             @PathVariable String userId) {
-        if (authServerConsument.accessTokenInvalid(accessToken)) {
+        if (authServerConsumer.accessTokenInvalid(accessToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -69,7 +69,7 @@ public class UserItemController {
     public ResponseEntity<String> updateUserInfo(@Parameter(description = "access token") @RequestHeader(name = "authorization") String accessToken,
                                                  @Parameter(description = "user id to update") @PathVariable String userId,
                                                  @RequestBody UserUpdateRequest userUpdateRequest) {
-        if (authServerConsument.accessTokenInvalid(accessToken)) {
+        if (authServerConsumer.accessTokenInvalid(accessToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -100,7 +100,7 @@ public class UserItemController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> deleteUserFromDb(@Parameter(description = "access token") @RequestHeader(name = "authorization") String accessToken,
                                                    @Parameter(description = "user to delete") @PathVariable String userId) {
-        if (authServerConsument.accessTokenInvalid(accessToken)) {
+        if (authServerConsumer.accessTokenInvalid(accessToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
