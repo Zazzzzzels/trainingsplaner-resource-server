@@ -44,8 +44,10 @@ public class UserItemController {
                                                             @RequestHeader(name = "authorization") String accessToken,
                                                         @Parameter(description = "userId to be searched")
                                                             @PathVariable String userId) {
-        if (authServerConsumer.accessTokenInvalid(accessToken)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        switch(authServerConsumer.checkToken(accessToken)) {
+            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         User user = userRepository.findUserByUserId(userId);
@@ -69,8 +71,10 @@ public class UserItemController {
     public ResponseEntity<String> updateUserInfo(@Parameter(description = "access token") @RequestHeader(name = "authorization") String accessToken,
                                                  @Parameter(description = "user id to update") @PathVariable String userId,
                                                  @RequestBody UserUpdateRequest userUpdateRequest) {
-        if (authServerConsumer.accessTokenInvalid(accessToken)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        switch(authServerConsumer.checkToken(accessToken)) {
+            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         User user = userRepository.findUserByUserId(userId);
@@ -100,8 +104,10 @@ public class UserItemController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> deleteUserFromDb(@Parameter(description = "access token") @RequestHeader(name = "authorization") String accessToken,
                                                    @Parameter(description = "user to delete") @PathVariable String userId) {
-        if (authServerConsumer.accessTokenInvalid(accessToken)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        switch(authServerConsumer.checkToken(accessToken)) {
+            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(userRepository.findUserByUserId(userId) == null) {

@@ -1,15 +1,16 @@
 package de.tlg.trainingsplaner.resourceserver.model.transformer;
 
-import de.tlg.trainingsplaner.resourceserver.model.entity.GenderEnum;
 import de.tlg.trainingsplaner.resourceserver.model.entity.User;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserRegisterRequest;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserUpdateRequest;
 import de.tlg.trainingsplaner.resourceserver.model.response.UserInfoResponse;
 
+import java.util.UUID;
+
 public class UserTransformer {
     public static User transformUserRegisterRequestToUser(UserRegisterRequest userRegisterRequest) {
         return new User(
-                userRegisterRequest.getUserId(),
+                UUID.fromString(userRegisterRequest.getFirstName()).toString(),
                 userRegisterRequest.getFirstName(),
                 userRegisterRequest.getLastName(),
                 userRegisterRequest.getGender(),

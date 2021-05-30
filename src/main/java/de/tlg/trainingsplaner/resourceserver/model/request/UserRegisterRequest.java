@@ -3,19 +3,10 @@ package de.tlg.trainingsplaner.resourceserver.model.request;
 import de.tlg.trainingsplaner.resourceserver.model.entity.GenderEnum;
 
 public class UserRegisterRequest {
-    private String userId;
     private String firstName;
     private String lastName;
     private GenderEnum gender;
     private String email;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getFirstName() {
         return firstName;

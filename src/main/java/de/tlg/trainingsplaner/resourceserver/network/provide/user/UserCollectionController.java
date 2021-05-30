@@ -1,6 +1,7 @@
 package de.tlg.trainingsplaner.resourceserver.network.provide.user;
 
 import de.tlg.trainingsplaner.resourceserver.config.ApplicationConfiguration;
+import de.tlg.trainingsplaner.resourceserver.model.entity.User;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserRegisterRequest;
 import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
 import de.tlg.trainingsplaner.resourceserver.network.consume.AuthServerConsumer;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path= ApplicationConfiguration.USER_COLLECTION_BASE_PATH)
@@ -43,25 +45,33 @@ public class UserCollectionController {
     public ResponseEntity<String> registerNewUser (@Parameter(description = "access token")
                                                        @RequestHeader(name = "authorization") String accessToken,
                                                    @RequestBody UserRegisterRequest userRegisterRequest) {
-        if (authServerConsumer.accessTokenInvalid(accessToken)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        switch(authServerConsumer.checkToken(accessToken)) {
+            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        // prevent email or userId from being used more than once
-        if (userRepository.findUserByEmail(userRegisterRequest.getEmail()) != null
-                || userRepository.findUserByUserId(userRegisterRequest.getUserId()) != null) {
+        // prevent email from being used more than once
+        if (userRepository.findUserByEmail(userRegisterRequest.getEmail()) != null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        // save user in db
-        userRepository.save(UserTransformer.transformUserRegisterRequestToUser(userRegisterRequest));
+        // transform request to db user model
+        User user = UserTransformer.transformUserRegisterRequestToUser(userRegisterRequest);
+
+        // prevent user id from being used more than once
+        while(userRepository.findUserByUserId(user.getUserId()) != null) {
+            user.setUserId(UUID.randomUUID().toString());
+        }
+
+        userRepository.save(user);
 
         ResponseEntity<String> result;
 
         try {
             // prepare response header
             URI locationURI = new URI(String.format("%s/%s", ApplicationConfiguration.USER_COLLECTION_BASE_PATH,
-                    userRegisterRequest.getUserId()));
+                    user.getUserId()));
             result = ResponseEntity.created(locationURI).build();
         } catch(URISyntaxException exception) {
             exception.printStackTrace();

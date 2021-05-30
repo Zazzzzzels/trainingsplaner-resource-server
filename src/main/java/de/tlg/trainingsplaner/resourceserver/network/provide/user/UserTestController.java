@@ -26,7 +26,6 @@ public class UserTestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> addMultipleUsers(@RequestBody List<UserRegisterRequest> userRegisterRequests) {
         for(UserRegisterRequest userRegisterRequest : userRegisterRequests) {
-            userRegisterRequest.setUserId(UUID.randomUUID().toString());
             userRepository.save(UserTransformer.transformUserRegisterRequestToUser(userRegisterRequest));
         }
         return ResponseEntity.ok(String.format("added %d users", userRegisterRequests.size()));
