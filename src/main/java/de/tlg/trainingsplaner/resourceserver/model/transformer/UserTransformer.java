@@ -10,7 +10,7 @@ import java.util.UUID;
 public class UserTransformer {
     public static User transformUserRegisterRequestToUser(UserRegisterRequest userRegisterRequest) {
         return new User(
-                UUID.fromString(userRegisterRequest.getFirstName()).toString(),
+                UUID.randomUUID().toString(),
                 userRegisterRequest.getFirstName(),
                 userRegisterRequest.getLastName(),
                 userRegisterRequest.getGender(),

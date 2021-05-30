@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+// ONLY USED TO PUT DATA INTO DB
 @RestController
 @RequestMapping(path = ApplicationConfiguration.USER_RESOURCE_TEST_BASE_PATH)
 public class UserTestController {
@@ -49,7 +49,11 @@ public class UserTestController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> clearDatabase() {
+        int numOfUsers = 0;
+        for (User ignored : userRepository.findAll()) {
+            numOfUsers++;
+        }
         userRepository.deleteAll();
-        return ResponseEntity.ok("all users deleted");
+        return ResponseEntity.ok("all " + numOfUsers + " users deleted");
     }
 }

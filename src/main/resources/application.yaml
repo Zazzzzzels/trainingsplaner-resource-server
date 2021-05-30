@@ -1,12 +1,12 @@
+server:
+  port: 8081
+
 logging:
   level:
     orgspringframework:
       web:
         filter:
           CommonsRequestLoggingFilter: DEBUG
-
-server:
-  port: 8080
 
 spring:
   datasource:
