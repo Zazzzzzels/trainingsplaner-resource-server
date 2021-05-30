@@ -29,7 +29,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\":\"2592\",\n    \"firstName\":\"Justin\",\n    \"lastName\":\"Gatlin\",\n    \"gender\":\"MALE\",\n    \"email\":\"justin@the.doper\"\n}",
+					"raw": "{\n    \"firstName\":\"Jonas\",\n    \"lastName\":\"Hennecke\",\n    \"gender\":\"MALE\",\n    \"email\":\"hennecke.jonas@tlg.de\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,7 +67,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8081/trainingsplaner/resource-server/users/3651e932-096d-4a15-9423-780b1514f14d",
+					"raw": "localhost:8081/trainingsplaner/resource-server/users/{{userId}}",
 					"host": [
 						"localhost"
 					],
@@ -76,7 +76,7 @@
 						"trainingsplaner",
 						"resource-server",
 						"users",
-						"3651e932-096d-4a15-9423-780b1514f14d"
+						"{{userId}}"
 					]
 				}
 			},
@@ -114,25 +114,6 @@
 			"response": []
 		},
 		{
-			"name": "Generate open-api-docs",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8081/resource-server/tp-resource-server-api-docs.yaml",
-					"host": [
-						"localhost"
-					],
-					"port": "8081",
-					"path": [
-						"resource-server",
-						"tp-resource-server-api-docs.yaml"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Update user info",
 			"request": {
 				"auth": {
@@ -149,7 +130,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\":\"newmail@from.bolt\"\n}",
+					"raw": "{\n    \"email\":\"chris@the.man\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -157,7 +138,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8081/trainingsplaner/resource-server/users/3651e932-096d-4a15-9423-780b1514f14d",
+					"raw": "localhost:8081/trainingsplaner/resource-server/users/{{userId}}",
 					"host": [
 						"localhost"
 					],
@@ -166,7 +147,7 @@
 						"trainingsplaner",
 						"resource-server",
 						"users",
-						"3651e932-096d-4a15-9423-780b1514f14d"
+						"{{userId}}"
 					]
 				}
 			},
