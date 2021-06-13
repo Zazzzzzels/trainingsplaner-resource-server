@@ -1,11 +1,9 @@
 package de.tlg.trainingsplaner.resourceserver.network.consume;
 
-import de.tlg.trainingsplaner.resourceserver.network.provide.user.UserCollectionController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;

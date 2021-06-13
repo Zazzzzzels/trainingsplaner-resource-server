@@ -1,4 +1,4 @@
-package de.tlg.trainingsplaner.resourceserver.network.user;
+package de.tlg.trainingsplaner.resourceserver.network.provide;
 
 import de.tlg.trainingsplaner.resourceserver.db.UserDatabase;
 import de.tlg.trainingsplaner.resourceserver.model.entity.GenderEnum;
@@ -8,7 +8,6 @@ import de.tlg.trainingsplaner.resourceserver.model.request.UserUpdateRequest;
 import de.tlg.trainingsplaner.resourceserver.model.response.UserInfoResponse;
 import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
 import de.tlg.trainingsplaner.resourceserver.network.consume.AuthServerConsumer;
-import de.tlg.trainingsplaner.resourceserver.network.provide.user.UserItemController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

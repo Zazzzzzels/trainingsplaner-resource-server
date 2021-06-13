@@ -1,4 +1,4 @@
-package de.tlg.trainingsplaner.resourceserver.network.user;
+package de.tlg.trainingsplaner.resourceserver.network.provide;
 
 import de.tlg.trainingsplaner.resourceserver.config.URLConfig;
 import de.tlg.trainingsplaner.resourceserver.db.UserDatabase;
@@ -7,7 +7,6 @@ import de.tlg.trainingsplaner.resourceserver.model.entity.User;
 import de.tlg.trainingsplaner.resourceserver.model.request.RequestValidator;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserRegisterRequest;
 import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
-import de.tlg.trainingsplaner.resourceserver.network.provide.user.UserCollectionController;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
