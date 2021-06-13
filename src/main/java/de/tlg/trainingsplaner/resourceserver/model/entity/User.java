@@ -11,18 +11,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    //@Column(nullable = false)
     private String userId;
 
-    //@Column(nullable = false)
     private String firstName;
 
-    //@Column(nullable = false)
     private String lastName;
 
     private GenderEnum gender;
 
-    //@Column(nullable = false)
     @NotNull
     private String email;
 

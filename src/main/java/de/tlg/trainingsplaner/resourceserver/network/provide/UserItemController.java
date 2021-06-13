@@ -59,6 +59,7 @@ public class UserItemController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+        // make sure that the requested user is existing
         User user = this.userDatabase.findUserById(userId);
 
         if (user == null) {

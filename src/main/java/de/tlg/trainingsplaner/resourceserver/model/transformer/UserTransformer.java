@@ -11,6 +11,9 @@ import java.util.UUID;
 @Component
 public class UserTransformer {
 
+    /*
+    transform a user register request to user
+     */
     public User transformUserRegisterRequestToUser(UserRegisterRequest userRegisterRequest) {
         return new User.Builder()
                 .userId(UUID.randomUUID().toString())
@@ -21,12 +24,18 @@ public class UserTransformer {
                 .build();
     }
 
+    /*
+    transform a user update request to user
+     */
     public User transformUserUpdateRequestToUser(UserUpdateRequest userUpdateRequest, User user) {
         user.setEmail(userUpdateRequest.getEmail());
         user.setGender(userUpdateRequest.getGender());
         return user;
     }
 
+    /*
+    transform a user to user info response
+     */
     public UserInfoResponse transformUserToUserInfoResponse(User user) {
         return new UserInfoResponse(
                 user.getUserId(),

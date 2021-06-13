@@ -23,6 +23,7 @@ public class AuthServerConsumer {
 
     public boolean accessTokenUnauthorized(String accessToken) {
 
+        // create http request
         HttpHeaders headers = new HttpHeaders();
         headers.set("authorization", accessToken);
 

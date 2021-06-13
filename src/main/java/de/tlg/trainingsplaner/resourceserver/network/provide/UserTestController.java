@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * This class is only used for local test purposed. Check of accessToken is not done here.
+ * Controller will be deactivated once this app will be deployed on a production environment..
  */
 @RestController
 @RequestMapping(path = URLConfig.USER_RESOURCE_TEST_PATH)
