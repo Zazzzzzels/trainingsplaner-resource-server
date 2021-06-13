@@ -1,6 +1,8 @@
 # trainingsplaner-resource-server
 
-Resource Server für die Trainingsplaner App. Die Anwendung läuft lokal auf Port ``8081`` 
+Diese Anwendung implementiert den Resource Server für die Trainingsplaner App und befindet sich aktuell in Entwicklung. 
+
+Dieser REST Service läuft momentan lokal auf Port ``8081`` 
 (konfiguriert in ``application.properties``).
 
 ## Dokumentation

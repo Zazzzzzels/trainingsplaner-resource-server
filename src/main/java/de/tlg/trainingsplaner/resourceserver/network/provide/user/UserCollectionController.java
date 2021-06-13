@@ -1,13 +1,12 @@
 package de.tlg.trainingsplaner.resourceserver.network.provide.user;
 
-import de.tlg.trainingsplaner.resourceserver.config.ApplicationConfiguration;
+import de.tlg.trainingsplaner.resourceserver.config.URLConfig;
+import de.tlg.trainingsplaner.resourceserver.db.UserDatabase;
 import de.tlg.trainingsplaner.resourceserver.model.entity.User;
+import de.tlg.trainingsplaner.resourceserver.model.request.RequestValidator;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserRegisterRequest;
 import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
-import de.tlg.trainingsplaner.resourceserver.network.consume.AuthServerConsumer;
-import de.tlg.trainingsplaner.resourceserver.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,18 +19,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 
+/**
+ * RestController class for the user collection resource
+ */
 @RestController
-@RequestMapping(path= ApplicationConfiguration.USER_COLLECTION_BASE_PATH)
+@RequestMapping(path= URLConfig.USER_COLLECTION_PATH)
 public class UserCollectionController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UserCollectionController.class);
 
     @Autowired
-    UserRepository userRepository;
+    private RequestValidator requestValidator;
 
-    AuthServerConsumer authServerConsumer = new AuthServerConsumer();
+    @Autowired
+    private UserDatabase userDatabase;
+
+    @Autowired
+    private UserTransformer userTransformer;
 
     @Operation(summary = "register new user in database", operationId = "registerNewUser")
     @ApiResponses(value = {
@@ -42,76 +47,58 @@ public class UserCollectionController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> registerNewUser (@Parameter(description = "access token")
-                                                       @RequestHeader(name = "authorization") String accessToken,
-                                                   @RequestBody UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<String> registerNewUser (@RequestBody UserRegisterRequest userRegisterRequest) {
 
-        switch(authServerConsumer.checkToken(accessToken)) {
-            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        // this call is expected to come from the authorization server
+        // TODO: authentication for auth server itself will be implemented later
+
+        // validate incoming data and return bad request if validation fails
+        if(requestValidator.isBadUserRegisterRequest(userRegisterRequest)) {
+            LOGGER.info("Bad user register request: {}.", userRegisterRequest);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         // prevent email from being used more than once
-        if (userRepository.findUserByEmail(userRegisterRequest.getEmail()) != null) {
+        if (this.userDatabase.findUserByEmail(userRegisterRequest.getEmail()) != null) {
+            LOGGER.info("Email '{}' is already used for an existing account.", userRegisterRequest.getEmail());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        // transform request to db user model
-        User user = UserTransformer.transformUserRegisterRequestToUser(userRegisterRequest);
-
-        // prevent user id from being used more than once
-        while(userRepository.findUserByUserId(user.getUserId()) != null) {
-            user.setUserId(UUID.randomUUID().toString());
-        }
-
-        userRepository.save(user);
+        // transform request to db user model and save in db
+        // saveNewUser(...) creates the user id which is used in response creation
+        User user = this.userDatabase.saveNewUser(this.userTransformer.transformUserRegisterRequestToUser(userRegisterRequest));
 
         ResponseEntity<String> result;
 
         try {
             // prepare response header
-            URI locationURI = new URI(String.format("%s/%s", ApplicationConfiguration.USER_COLLECTION_BASE_PATH,
-                    user.getUserId()));
-            result = ResponseEntity.created(locationURI).build();
+            final URI location = new URI(String.format("%s/%s", URLConfig.USER_COLLECTION_PATH, user.getUserId()));
+            result = ResponseEntity.created(location).build();
         } catch(URISyntaxException exception) {
-            exception.printStackTrace();
+            LOGGER.error("Error while creating URI for response." );
             result = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        LOGGER.info("User '{}' successfully created.", user.getUserId());
 
         return result;
     }
 
-    @Operation(summary = "not allowed")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "405", description = "method not allowed", content = @Content)
-    })
     @GetMapping
     public ResponseEntity<String> get() {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @Operation(summary = "not allowed")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "405", description = "method not allowed", content = @Content)
-    })
     @PutMapping
     public ResponseEntity<String> put() {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @Operation(summary = "not allowed")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "405", description = "method not allowed", content = @Content)
-    })
     @PatchMapping
     public ResponseEntity<String> patch() {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @Operation(summary = "not allowed")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "405", description = "method not allowed", content = @Content)
-    })
     @DeleteMapping
     public ResponseEntity<String> delete() {
         return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);

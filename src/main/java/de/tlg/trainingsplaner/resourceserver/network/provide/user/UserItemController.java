@@ -1,12 +1,13 @@
 package de.tlg.trainingsplaner.resourceserver.network.provide.user;
 
-import de.tlg.trainingsplaner.resourceserver.config.ApplicationConfiguration;
+import de.tlg.trainingsplaner.resourceserver.config.URLConfig;
+import de.tlg.trainingsplaner.resourceserver.db.UserDatabase;
 import de.tlg.trainingsplaner.resourceserver.model.entity.User;
+import de.tlg.trainingsplaner.resourceserver.model.request.RequestValidator;
 import de.tlg.trainingsplaner.resourceserver.model.request.UserUpdateRequest;
 import de.tlg.trainingsplaner.resourceserver.model.response.UserInfoResponse;
 import de.tlg.trainingsplaner.resourceserver.model.transformer.UserTransformer;
 import de.tlg.trainingsplaner.resourceserver.network.consume.AuthServerConsumer;
-import de.tlg.trainingsplaner.resourceserver.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,15 +22,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path= ApplicationConfiguration.USER_ITEM_BASE_PATH)
+@RequestMapping(path= URLConfig.USER_ITEM_PATH)
 public class UserItemController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UserItemController.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private RequestValidator requestValidator;
 
-    AuthServerConsumer authServerConsumer = new AuthServerConsumer();
+    @Autowired
+    private UserTransformer userTransformer;
+
+    @Autowired
+    private UserDatabase userDatabase;
+
+    @Autowired
+    AuthServerConsumer authServerConsumer;
 
     @Operation(summary = "get a users info by its id", operationId = "getUserInfo")
     @ApiResponses(value = {
@@ -45,18 +53,20 @@ public class UserItemController {
                                                         @Parameter(description = "userId to be searched")
                                                             @PathVariable String userId) {
 
-        switch(authServerConsumer.checkToken(accessToken)) {
-            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        // check access token at auth server
+        if(authServerConsumer.accessTokenUnauthorized(accessToken)) {
+            LOGGER.debug("Access Token '{}' is not valid.", accessToken);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        User user = userRepository.findUserByUserId(userId);
+        User user = this.userDatabase.findUserById(userId);
 
         if (user == null) {
+            LOGGER.info("User with id '{}' was not found.", userId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok(UserTransformer.transformUserToUserInfoResponse(user));
+        return ResponseEntity.ok(this.userTransformer.transformUserToUserInfoResponse(user));
     }
 
     @Operation(summary = "override an existing user", operationId = "updateUserInfo")
@@ -72,21 +82,34 @@ public class UserItemController {
                                                  @Parameter(description = "user id to update") @PathVariable String userId,
                                                  @RequestBody UserUpdateRequest userUpdateRequest) {
 
-        switch(authServerConsumer.checkToken(accessToken)) {
-            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        // check access token at auth server
+        if(authServerConsumer.accessTokenUnauthorized(accessToken)) {
+            LOGGER.debug("Access Token '{}' is not valid.", accessToken);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        User user = userRepository.findUserByUserId(userId);
+        // validate incoming data and return bad request if validation fails
+        if(requestValidator.isBadUserUpdateRequest(userUpdateRequest)) {
+            LOGGER.info("User update request is bad.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // find user from db to get access to db id for updating the right user
+        // and to ensure that there's a user with the given id which can be updated
+        User user = this.userDatabase.findUserById(userId);
 
         if (user == null) {
+            LOGGER.info("User with id '{}' was not found and can't be updated.", userId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         try {
-            userRepository.save(UserTransformer.transformUserUpdateRequestToUser(userUpdateRequest, user));
+            // save an updated version of the user, currently only updating the email address is supported
+            User updatedUser = this.userTransformer.transformUserUpdateRequestToUser(userUpdateRequest, user);
+            this.userDatabase.updateUser(updatedUser);
         } catch (Exception exception) {
-            LOGGER.error(exception.getLocalizedMessage());
+            // catch any unexpected exception on database operation
+            LOGGER.error("Failed to save user {} .", user);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -105,40 +128,39 @@ public class UserItemController {
     public ResponseEntity<String> deleteUserFromDb(@Parameter(description = "access token") @RequestHeader(name = "authorization") String accessToken,
                                                    @Parameter(description = "user to delete") @PathVariable String userId) {
 
-        switch(authServerConsumer.checkToken(accessToken)) {
-            case UNAUTHORIZED: return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            case INTERNAL_SERVER_ERROR: return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        // check access token at auth server
+        if(authServerConsumer.accessTokenUnauthorized(accessToken)) {
+            LOGGER.debug("Access Token '{}' is not valid.", accessToken);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        if(userRepository.findUserByUserId(userId) == null) {
+        // find user in database to get technical db id for deletion
+        // and to ensure that there's a user with the given id which can be deleted
+        User user = this.userDatabase.findUserById(userId);
+
+        if (user == null) {
+            LOGGER.info("User with id '{}' was not found and can't be deleted.", userId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        User user = userRepository.findUserByUserId(userId);
-
         try {
-            userRepository.deleteById(user.getId());
+            // delete user by using the database id
+            this.userDatabase.deleteUserById(user.getId());
         } catch (Exception exception) {
-            LOGGER.error(exception.getLocalizedMessage());
+            // catch any unexpected exception on database operation
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        LOGGER.info("User with id '{}' was deleted successfully.", userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "not implemented")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "501", description = "not implemented", content = @Content)
-    })
     @PostMapping
     public ResponseEntity<String> post() {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @Operation(summary = "not implemented")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "501", description = "not implemented", content = @Content)
-    })
     @PatchMapping
     public ResponseEntity<String> patch() {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);

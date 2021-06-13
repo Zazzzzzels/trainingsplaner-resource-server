@@ -1,5 +1,10 @@
 package de.tlg.trainingsplaner.resourceserver.network.consume;
 
+import de.tlg.trainingsplaner.resourceserver.network.provide.user.UserCollectionController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -7,43 +12,38 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.Duration;
-
 @Component
 public class AuthServerConsumer {
 
-//    @Value("${oauth.server.url}")
-    private final String authServerEndpoint = "http://localhost:8082/trainingsplaner/auth/token";
+    private final static Logger LOGGER = LoggerFactory.getLogger(AuthServerConsumer.class);
 
-    private final RestTemplate restTemplate = new RestTemplateBuilder()
-            .setConnectTimeout(Duration.ofMillis(3000))
-            .setReadTimeout(Duration.ofMillis(3000))
-            .build();
+    @Value("${app.authServer.tokenValidationEndpoint}")
+    private String authServerEndpoint;
 
-    // call Auth Server to check access token
-    public HttpStatus checkToken(String accessToken) {
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public boolean accessTokenUnauthorized(String accessToken) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("authorization", accessToken);
 
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response;
-
         try {
-            response = restTemplate.exchange(new URI(authServerEndpoint), HttpMethod.GET, httpEntity, String.class);
-        } catch(HttpClientErrorException.Unauthorized unauthorizedClientException) {
-            return HttpStatus.UNAUTHORIZED;
-        } catch(HttpServerErrorException | URISyntaxException internalServerException) {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            // at current state not expecting any information within the body
+            // the auth server communication only by sending the correct http status
+            LOGGER.debug("checking token '{}' at authorization server", accessToken);
+            restTemplate.exchange(authServerEndpoint, HttpMethod.GET, httpEntity, String.class);
+        } catch (HttpClientErrorException.Unauthorized unauthorizedException) {
+            LOGGER.debug("access token '{}' is unauthorized to request data", accessToken);
+            return true;
+        } catch (Exception serverErrorException)  {
+             // catch any other exception and throw it directly back to the client as internal server error
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "an unexpected error happened during access token validation");
         }
 
-        if(HttpStatus.OK.equals(response.getStatusCode())) {
-            return HttpStatus.OK;
-        } else {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+        LOGGER.debug("access token '{}' is authorized", accessToken);
+        return false;
     }
 }

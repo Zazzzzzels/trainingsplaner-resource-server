@@ -8,28 +8,11 @@
 		{
 			"name": "Add new user to database",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "authorized",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJojfjpcjwevwnvowivnqeo.advowgqeovn=",
-						"type": "text",
-						"disabled": true
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"Jonas\",\n    \"lastName\":\"Hennecke\",\n    \"gender\":\"MALE\",\n    \"email\":\"hennecke.jonas@tlg.de\"\n}",
+					"raw": "{\n    \"firstName\":\"Jonas\",\n    \"lastName\":\"Jonas\",\n    \"email\":\"jonas@mail.de\",\n    \"gender\":\"MALE\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -65,7 +48,14 @@
 					]
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "cd19911197c401950cc098dca8b32b54c7b56c0d",
+						"type": "text",
+						"disabled": true
+					}
+				],
 				"url": {
 					"raw": "localhost:8081/trainingsplaner/resource-server/users/{{userId}}",
 					"host": [
@@ -90,7 +80,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "authorized",
+							"value": "66dacfdf1c4aa845993bd1939fdd76e9fb5b9c73",
 							"type": "string"
 						}
 					]
@@ -130,7 +120,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\":\"chris@the.man\"\n}",
+					"raw": "{\n    \"email\":\"jonas@again.com\",\n    \"gender\":\"MALE\";\n}",
 					"options": {
 						"raw": {
 							"language": "json"

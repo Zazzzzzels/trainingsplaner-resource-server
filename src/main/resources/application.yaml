@@ -1,12 +1,16 @@
+app:
+  authServer:
+    tokenValidationEndpoint: http://localhost:8082/check/token
+
 server:
   port: 8081
+  error:
+    include-stacktrace: never
 
 logging:
   level:
-    orgspringframework:
-      web:
-        filter:
-          CommonsRequestLoggingFilter: DEBUG
+    de.tlg.trainingsplaner.resourceserver: DEBUG
+    orgspringframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 
 spring:
   datasource:
@@ -16,6 +20,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    show-sql: true
 
 springdoc:
   api-docs:

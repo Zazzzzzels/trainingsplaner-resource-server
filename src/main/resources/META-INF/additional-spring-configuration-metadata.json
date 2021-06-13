@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "app.authServer.tokenValidationEndpoint",
+      "type": "java.lang.String",
+      "description": "Token validation endpoint."
+  }
+] }

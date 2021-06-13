@@ -11,31 +11,30 @@ paths:
     get:
       tags:
         - user-collection-controller
-      summary: not allowed
       operationId: get
       responses:
-        "405":
-          description: method not allowed
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
     put:
       tags:
         - user-collection-controller
-      summary: not allowed
       operationId: put
       responses:
-        "405":
-          description: method not allowed
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
     post:
       tags:
         - user-collection-controller
       summary: register new user in database
       operationId: registerNewUser
-      parameters:
-        - name: authorization
-          in: header
-          description: access token
-          required: true
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -45,28 +44,34 @@ paths:
       responses:
         "201":
           description: user information was created
-        "500":
-          description: unexpected error
         "409":
           description: given mail and/or id is already registered
         "401":
           description: client is unauthorized to request user info
+        "500":
+          description: unexpected error
     delete:
       tags:
         - user-collection-controller
-      summary: not allowed
       operationId: delete
       responses:
-        "405":
-          description: method not allowed
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
     patch:
       tags:
         - user-collection-controller
-      summary: not allowed
       operationId: patch
       responses:
-        "405":
-          description: method not allowed
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
   /trainingsplaner/resource-server/users/{userId}:
     get:
       tags:
@@ -87,6 +92,8 @@ paths:
           schema:
             type: string
       responses:
+        "401":
+          description: client is unauthorized to request user info
         "200":
           description: the user was found
           content:
@@ -95,8 +102,6 @@ paths:
                 $ref: '#/components/schemas/UserInfoResponse'
         "404":
           description: no user for given id was not found
-        "401":
-          description: client is unauthorized to request user info
     put:
       tags:
         - user-item-controller
@@ -122,22 +127,25 @@ paths:
               $ref: '#/components/schemas/UserUpdateRequest'
         required: true
       responses:
-        "500":
-          description: unexpected error
-        "404":
-          description: no user for given id was not found
-        "401":
-          description: client is unauthorized to update user info
         "204":
           description: user information was updated
+        "401":
+          description: client is unauthorized to update user info
+        "404":
+          description: no user for given id was not found
+        "500":
+          description: unexpected error
     post:
       tags:
         - user-item-controller
-      summary: not implemented
       operationId: post
       responses:
-        "501":
-          description: not implemented
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
     delete:
       tags:
         - user-item-controller
@@ -157,22 +165,25 @@ paths:
           schema:
             type: string
       responses:
-        "500":
-          description: unexpected error
-        "200":
-          description: the user was deleted
-        "404":
-          description: no user for given id was not found
         "401":
           description: client is unauthorized to delete user info
+        "404":
+          description: no user for given id was not found
+        "200":
+          description: the user was deleted
+        "500":
+          description: unexpected error
     patch:
       tags:
         - user-item-controller
-      summary: not implemented
       operationId: patch_1
       responses:
-        "501":
-          description: not implemented
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
   /trainingsplaner/resource-server/test/users:
     get:
       tags:
@@ -216,7 +227,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: string
+                type: object
 components:
   schemas:
     UserUpdateRequest:
@@ -224,11 +235,15 @@ components:
       properties:
         email:
           type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - DIVERSE
     UserRegisterRequest:
       type: object
       properties:
-        userId:
-          type: string
         firstName:
           type: string
         lastName:
