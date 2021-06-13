@@ -15,8 +15,8 @@ logging:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/trainingsplanerTest
-    username: Zazzzzzels
-    password: makeSoftware21
+    username: user
+    password: password
   jpa:
     hibernate:
       ddl-auto: create
