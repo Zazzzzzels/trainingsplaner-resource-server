@@ -25,8 +25,3 @@ Token eingegeben werden.
 
 Alternativ kann der Authorization Header manuell unter dem "Header" Tab eingegeben werden. Dann muss 
 ``Bearer {accessToken}`` eingetragen werden.
-
-#### Mögliche Werte
-* ``Bearer authorized``: wird als gültiger Token erkannt.
-* Andere Werte werden momentan abgelehnt.
-* `Offen`: Implementierung des Token Checks durch den Auth Server.
